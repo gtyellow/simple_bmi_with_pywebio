@@ -1,4 +1,4 @@
-#Python 3 code, 
+#Python 3 code, BMI calculator that takes input of height and weight and provides BMI as well as lbs to gain or lose
 
 from pywebio.input import input, input_group, FLOAT
 from pywebio.output import put_text
