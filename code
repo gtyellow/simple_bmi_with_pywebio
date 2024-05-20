@@ -1,0 +1,55 @@
+#Python 3 code, 
+
+from pywebio.input import input, input_group, FLOAT
+from pywebio.output import put_text
+
+# Define our function
+def bmi():
+    
+    #User will input their height in feet and inches
+    height_ft_in = input_group("Input your height:", [
+        input("feet:", name="feet", type=FLOAT),
+        input("inches:", name="inches", type=FLOAT)
+    ])
+    
+    #User will input their weight in lbs
+    weight_lb = input("Input your weight(lb)：", type=FLOAT)
+    
+    #Convert height and weight to cm and kg
+    height_cm=(height_ft_in['feet']*12+height_ft_in['inches'])*2.54
+    weight_kg=weight_lb/2.2046
+    
+    #Calculate BMI with cm and kg values
+    BMI = weight_kg / (height_cm / 100) ** 2
+    
+    #Calculate target wieght loss or gain based on over or under BMI
+    if BMI>25 or BMI <18.5:
+        weight_target_lb=(25 * (height_cm / 100) ** 2) * 2.2046
+
+    #values of BMI.  The number is the max BMI to be in the group
+    top_status = [(16, 'Severely underweight'), (18.5, 'Underweight'),
+                (25, 'Normal'), (30, 'Overweight'),
+                (35, 'Moderately obese'), (float('inf'), 'Severely obese')]
+
+    #loop through each category to determine if BMI matches.  We start with lowest category
+    for top, status in top_status:
+        
+        #If BMI is underweight or severly underweight, it meets and provides lbs to gain
+        if BMI <= top and BMI <=18.5:
+            put_text('Your BMI: %.1f. Category: %s' % (BMI, status) + ".  Gain " + str(round(weight_target_lb - weight_lb, 1)) + " lbs to reach Normal weight")
+            break
+        
+        #If BMI is more than normal weight, it meets and provides lbs to gain
+        elif BMI <= top and BMI > 25:
+            put_text('Your BMI: %.1f. Category: %s' % (BMI, status) + ".  Lose " + str(round(weight_lb-weight_target_lb, 1)) + " lbs to reach Normal weight")
+            break
+        
+        #If BMI is normal weight, it provides a message without lgs to lose or gain
+        elif BMI<= top:
+            put_text('Your BMI: %.1f. Category: %s' % (BMI, status))
+            break
+        
+
+#Initializes function
+if __name__ == '__main__':
+    bmi()
